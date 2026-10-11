@@ -23,22 +23,43 @@ namespace ValheimFirearms
             public float FreeAt;
         }
 
+        /// <summary>
+        /// Les sons sont intégrés à la DLL (ressources « sounds.*.wav ») : une installation incomplète ne peut pas
+        /// rendre l'arme muette. Un fichier du même nom dans plugins/ValheimFirearms/sounds/ remplace le son intégré.
+        /// </summary>
         public static void LoadAll(string pluginDir)
         {
-            var dir = Path.Combine(pluginDir, "sounds");
-            if (!Directory.Exists(dir)) { Plugin.Log.LogError("Dossier de sons introuvable : " + dir); return; }
-            foreach (var f in Directory.GetFiles(dir, "*.wav"))
+            var asm = typeof(GunAudio).Assembly;
+            foreach (var res in asm.GetManifestResourceNames())
             {
-                try { Clips[Path.GetFileNameWithoutExtension(f)] = LoadWav(f); }
-                catch (Exception e) { Plugin.Log.LogError($"Son illisible {f} : {e.Message}"); }
+                if (!res.StartsWith("sounds.") || !res.EndsWith(".wav")) continue;
+                var name = res.Substring(7, res.Length - 11);
+                try
+                {
+                    using (var st = asm.GetManifestResourceStream(res))
+                    using (var ms = new MemoryStream())
+                    {
+                        st.CopyTo(ms);
+                        Clips[name] = LoadWav(name, ms.ToArray());
+                    }
+                }
+                catch (Exception e) { Plugin.Log.LogError($"Son intégré illisible {res} : {e.Message}"); }
             }
+            var dir = Path.Combine(pluginDir, "sounds");
+            if (Directory.Exists(dir))
+                foreach (var f in Directory.GetFiles(dir, "*.wav"))
+                {
+                    try { Clips[Path.GetFileNameWithoutExtension(f)] = LoadWav(Path.GetFileNameWithoutExtension(f), File.ReadAllBytes(f)); }
+                    catch (Exception e) { Plugin.Log.LogError($"Son illisible {f} : {e.Message}"); }
+                }
             Plugin.Log.LogInfo($"{Clips.Count} sons chargés");
+            if (Get("shot_1") == null) Plugin.Log.LogError("Son de tir introuvable : l'arme sera muette");
         }
 
         /// <summary>Récupère le groupe de mixage SFX et quelques sons d'impact depuis les prefabs vanilla.</summary>
         public static void BindVanilla()
         {
-            foreach (var name in new[] { "sfx_arrow_hit", "sfx_metalbars_hit", "sfx_rock_hit", "sfx_wood_hit" })
+            foreach (var name in new[] { "sfx_metalbars_hit", "sfx_rock_hit" })
             {
                 var p = Jotunn.Managers.PrefabManager.Instance.GetPrefab(name);
                 var zsfx = p ? p.GetComponent<ZSFX>() : null;
@@ -49,9 +70,8 @@ namespace ValheimFirearms
         }
 
         /// <summary>WAV PCM 16 bits (ce que produit notre conversion ffmpeg).</summary>
-        private static AudioClip LoadWav(string path)
+        private static AudioClip LoadWav(string name, byte[] d)
         {
-            var d = File.ReadAllBytes(path);
             if (d.Length < 44 || d[0] != 'R' || d[8] != 'W') throw new InvalidDataException("pas un WAV");
             int ch = 1, rate = 44100, bits = 16, pos = 12, dataOff = -1, dataLen = 0;
             while (pos + 8 <= d.Length)
@@ -65,7 +85,7 @@ namespace ValheimFirearms
             if (dataOff < 0 || bits != 16) throw new InvalidDataException("format non géré (PCM 16 bits attendu)");
             int n = dataLen / 2; var s = new float[n];
             for (int i = 0; i < n; i++) s[i] = BitConverter.ToInt16(d, dataOff + i * 2) / 32768f;
-            var clip = AudioClip.Create(Path.GetFileNameWithoutExtension(path), n / ch, ch, rate, false);
+            var clip = AudioClip.Create(name, n / ch, ch, rate, false);
             clip.SetData(s, 0);
             return clip;
         }
@@ -112,7 +132,7 @@ namespace ValheimFirearms
         }
 
         /// <param name="loud">Son d'arme (atténuation lente + délai de propagation + passe-bas avec la distance).</param>
-        public static void Play(AudioClip clip, Vector3 pos, float volume, float maxDistance, bool loud = false, float pitchJitter = 0.04f, float extraDelay = 0f)
+        public static void Play(AudioClip clip, Vector3 pos, float volume, float maxDistance, bool loud = false, float pitchJitter = 0.04f, float extraDelay = 0f, float pitch = 1f)
         {
             if (clip == null || ZNet.instance != null && ZNet.instance.IsDedicated()) return;
             float dist = Vector3.Distance(ListenerPos(), pos);
@@ -121,7 +141,7 @@ namespace ValheimFirearms
             v.Src.transform.position = pos;
             v.Src.clip = clip;
             v.Src.volume = Mathf.Clamp01(volume * FirearmsConfig.Volume.Value);
-            v.Src.pitch = 1f + UnityEngine.Random.Range(-pitchJitter, pitchJitter);
+            v.Src.pitch = pitch + UnityEngine.Random.Range(-pitchJitter, pitchJitter);
             v.Src.rolloffMode = AudioRolloffMode.Custom;
             v.Src.maxDistance = maxDistance;
             v.Src.SetCustomCurve(AudioSourceCurveType.CustomRolloff, loud ? _gunRolloff : _softRolloff);

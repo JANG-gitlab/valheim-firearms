@@ -8,9 +8,8 @@ if ($LASTEXITCODE -ne 0) { throw "La compilation a échoué" }
 $version = ([xml](Get-Content ValheimFirearms.csproj)).Project.PropertyGroup.Version | Where-Object { $_ } | Select-Object -First 1
 $stage = Join-Path $PSScriptRoot "dist\stage"
 Remove-Item -Recurse -Force $stage -ErrorAction SilentlyContinue
-New-Item -ItemType Directory -Force "$stage\ValheimFirearms\sounds" | Out-Null
+New-Item -ItemType Directory -Force "$stage\ValheimFirearms" | Out-Null
 Copy-Item bin\Release\ValheimFirearms.dll "$stage\ValheimFirearms\"
-Copy-Item assets\sounds\*.wav "$stage\ValheimFirearms\sounds\"
 Copy-Item README.md, CREDITS.md "$stage\ValheimFirearms\"
 
 $zip = Join-Path $PSScriptRoot "dist\ValheimFirearms-$version.zip"

@@ -125,7 +125,7 @@ namespace ValheimFirearms
                         new Color(0.55f, 0.38f, 0.2f), new Color(0.75f, 0.58f, 0.36f));
                     Burst(_dust, pos, normal, 0.3f, 4, new Vector2(0.3f, 0.9f), new Vector2(0.1f, 0.2f), new Vector2(0.6f, 1.2f),
                         new Color(0.55f, 0.45f, 0.32f, 0.5f), new Color(0.4f, 0.32f, 0.22f, 0.4f));
-                    GunAudio.Play(GunAudio.PickVanilla("sfx_arrow_hit") ?? GunAudio.Get("impact_dirt_2"), pos, 0.7f, 45f, pitchJitter: 0.15f);
+                    GunAudio.Play(GunAudio.Pick("impact_dirt_1", "impact_dirt_2"), pos, 0.8f, 45f, pitchJitter: 0.08f, pitch: 0.75f); // son mat, plus grave que sur la terre
                     Decal(pos, normal, col, light: false, size: Random.Range(0.045f, 0.06f));
                     return;
                 case SurfaceKind.Stone:

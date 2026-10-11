@@ -7,7 +7,7 @@
     <LangVersion>latest</LangVersion>
     <Nullable>disable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <DebugType>portable</DebugType>
@@ -64,19 +64,17 @@
     <Reference Include="Jotunn"><HintPath>$(BepInExDir)\plugins\ValheimModding-Jotunn\Jotunn.dll</HintPath><Private>false</Private></Reference>
   </ItemGroup>
 
-  <!-- Les sons sont livrés à côté de la DLL, dans un sous-dossier. -->
+  <!-- Les sons sont intégrés à la DLL (un dossier sounds\ à côté peut les remplacer). -->
   <ItemGroup>
-    <None Include="assets\sounds\*.wav" CopyToOutputDirectory="PreserveNewest" Link="sounds\%(Filename)%(Extension)" />
+    <EmbeddedResource Include="assets\sounds\*.wav" LogicalName="sounds.%(Filename)%(Extension)" />
   </ItemGroup>
 
   <Target Name="DeployToBepInEx" AfterTargets="Build" Condition="'$(DeployToProfile)' == 'true'">
     <PropertyGroup><PluginOut>$(BepInExDir)\plugins\ValheimFirearms</PluginOut></PropertyGroup>
     <ItemGroup>
       <DeployFiles Include="$(OutDir)ValheimFirearms.dll;$(OutDir)ValheimFirearms.pdb" />
-      <DeploySounds Include="$(OutDir)sounds\*.wav" />
     </ItemGroup>
     <Copy SourceFiles="@(DeployFiles)" DestinationFolder="$(PluginOut)" SkipUnchangedFiles="true" />
-    <Copy SourceFiles="@(DeploySounds)" DestinationFolder="$(PluginOut)\sounds" SkipUnchangedFiles="true" />
     <Message Importance="high" Text="ValheimFirearms -> $(PluginOut)" />
   </Target>
 

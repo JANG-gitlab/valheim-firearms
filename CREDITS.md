@@ -31,8 +31,7 @@ obligatoire en CC0, mais on cite les auteurs.
 ## Ressources du jeu utilisées à l'exécution (non redistribuées)
 
 - Le mod réutilise à l'exécution des éléments présents dans l'installation Valheim du joueur : shaders,
-  prefab de l'arbalète comme base de l'objet, animations de rechargement d'arbalète, sons `sfx_arrow_hit`,
-  `sfx_rock_hit` et `sfx_metalbars_hit`. Rien n'est extrait ni livré avec le mod.
+  prefab de l'arbalète comme base de l'objet, animations de rechargement d'arbalète, son `sfx_metalbars_hit`. Rien n'est extrait ni livré avec le mod.
 
 ## Bibliothèques
 

@@ -15,7 +15,7 @@ namespace ValheimFirearms
     {
         public const string Guid = "jean.valheimfirearms";
         public const string Name = "Valheim Firearms";
-        public const string Version = "0.1.0";
+        public const string Version = "0.1.1";
 
         internal static ManualLogSource Log;
         internal static Plugin Instance;

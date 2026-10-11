@@ -129,7 +129,9 @@ Compilation :
   Unity 6). Les DLL Unity 6 exigent `netstandard` 2.1 et `Span<T>`, absents des reference assemblies net462.
 - `assembly_valheim` et `assembly_utils` sont rendues publiques à la compilation par
   `BepInEx.AssemblyPublicizer.MSBuild`.
-- Après la compilation, la DLL et le dossier `sounds\` sont copiés dans
+- Les sons sont intégrés à la DLL comme ressources. Un fichier du même nom dans `plugins\ValheimFirearms\sounds\`
+  remplace le son intégré.
+- Après la compilation, la DLL est copiée dans
   `...\Thunderstore Mod Manager\DataFolder\Valheim\profiles\luigi\BepInEx\plugins\ValheimFirearms\`.
 
 Pour cibler d'autres chemins :
@@ -147,8 +149,8 @@ Pour désactiver la copie automatique : `-p:DeployToProfile=false`.
 1. Avoir **BepInExPack_Valheim** et **Jötunn** (installables depuis Thunderstore Mod Manager ou r2modman).
 2. Télécharger `ValheimFirearms-<version>.zip` dans l'onglet **Releases** du dépôt GitHub.
 3. Dans Thunderstore Mod Manager : choisir le profil, puis *Settings* → *Browse profile folder*. Décompresser le
-   zip dans `BepInEx\plugins\`, ce qui donne `BepInEx\plugins\ValheimFirearms\ValheimFirearms.dll` et
-   `...\ValheimFirearms\sounds\`.
+   zip dans `BepInEx\plugins\`, ce qui donne `BepInEx\plugins\ValheimFirearms\ValheimFirearms.dll`.
+   Les sons sont intégrés à la DLL.
 4. Lancer le jeu avec « Start modded ».
 
 Le serveur doit avoir la **même version** du mod.
@@ -158,7 +160,7 @@ Pour reconstruire le zip : `powershell -File package.ps1` (résultat dans `dist\
 ### Clients (Thunderstore Mod Manager, depuis les sources)
 
 1. Le profil doit avoir **BepInExPack_Valheim** et **Jötunn**.
-2. Copier le dossier `ValheimFirearms` (contenant `ValheimFirearms.dll` et `sounds\`) dans
+2. Copier le dossier `ValheimFirearms` (contenant `ValheimFirearms.dll`) dans
    `profiles\<profil>\BepInEx\plugins\`. La commande `dotnet build` le fait pour le profil `luigi`.
 3. Lancer le jeu avec « Start modded ». Sans passer par TMM : `run-game.ps1 -Profile luigi`.
 
