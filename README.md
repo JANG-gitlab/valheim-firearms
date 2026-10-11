@@ -142,7 +142,20 @@ Pour désactiver la copie automatique : `-p:DeployToProfile=false`.
 
 ## Installation
 
-### Clients (Thunderstore Mod Manager)
+### Pour les joueurs (sans compiler)
+
+1. Avoir **BepInExPack_Valheim** et **Jötunn** (installables depuis Thunderstore Mod Manager ou r2modman).
+2. Télécharger `ValheimFirearms-<version>.zip` dans l'onglet **Releases** du dépôt GitHub.
+3. Dans Thunderstore Mod Manager : choisir le profil, puis *Settings* → *Browse profile folder*. Décompresser le
+   zip dans `BepInEx\plugins\`, ce qui donne `BepInEx\plugins\ValheimFirearms\ValheimFirearms.dll` et
+   `...\ValheimFirearms\sounds\`.
+4. Lancer le jeu avec « Start modded ».
+
+Le serveur doit avoir la **même version** du mod.
+
+Pour reconstruire le zip : `powershell -File package.ps1` (résultat dans `dist\`).
+
+### Clients (Thunderstore Mod Manager, depuis les sources)
 
 1. Le profil doit avoir **BepInExPack_Valheim** et **Jötunn**.
 2. Copier le dossier `ValheimFirearms` (contenant `ValheimFirearms.dll` et `sounds\`) dans
