@@ -26,7 +26,7 @@ obligatoire en CC0, mais on cite les auteurs.
 
 - Le modèle de l'AK-47, la boîte de cartouches, les textures (bois, métal), les sprites de flash, de traçante
   et d'impact sont **générés par le code du mod** (`src/GunModel.cs`, `src/Procedural.cs`). Aucun fichier
-  externe n'est utilisé, et ces éléments sont sous la même licence que le mod.
+  externe n'est utilisé, et ces éléments sont sous la même licence que le mod (MIT, voir `LICENSE`). Les sons restent CC0.
 
 ## Ressources du jeu utilisées à l'exécution (non redistribuées)
 
