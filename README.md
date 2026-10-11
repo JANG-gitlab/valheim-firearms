@@ -40,11 +40,12 @@ Les touches se changent dans la config.
 - **Ricochets** : sur la pierre ou le métal, en incidence rasante, la balle ricoche. Le ricochet est uniquement
   visuel : il n'inflige pas de dégâts.
 - **Dégâts** :
-  - Ce sont des dégâts perforants, multipliés par √(énergie restante), avec un plancher.
+  - 80 par balle à la bouche du canon, multipliés par √(énergie restante), avec un plancher.
+  - Par défaut ce sont des **dégâts bruts** : ils ignorent les résistances et immunités des créatures et des boss
+    (`IgnoreResistances`). L'armure des joueurs s'applique toujours.
   - Un **headshot** est détecté par la distance au point de tête du personnage (`Character.GetHeadPoint`). Il
     applique un multiplicateur de 2,5 par défaut.
-  - Les **points faibles** natifs du jeu (`WeakSpot`, par collider) sont transmis via `HitData.m_weakSpot`. Le jeu
-    applique alors leurs résistances propres.
+  - Les balles touchent aussi les joueurs qui n'ont pas activé le PvP (`IgnorePvP`, activé par défaut).
 
 ### Multijoueur ([src/Network.cs](src/Network.cs))
 

@@ -208,7 +208,12 @@ namespace ValheimFirearms
                 m_ranged = true, m_blockable = true, m_dodgeable = true, m_pushForce = FirearmsConfig.PushForce.Value,
                 m_backstabBonus = 3f, m_staggerMultiplier = 1f, m_hitType = HitData.HitType.PlayerHit, m_weakSpot = (short)weak,
             };
-            hit.m_damage.m_pierce = dmg;
+            // Dégâts « bruts » (m_damage) : HitData.ApplyResistance ne les modifie jamais, donc ni résistance ni
+            // immunité de la cible (mobs, boss, points faibles). Sinon : perforant classique.
+            if (FirearmsConfig.IgnoreResistances.Value) hit.m_damage.m_damage = dmg;
+            else hit.m_damage.m_pierce = dmg;
+            // Le RPC_Damage vanilla ignore les tirs de joueur sur un joueur sans PvP, sauf si ce drapeau est mis.
+            hit.m_ignorePVP = FirearmsConfig.IgnorePvP.Value;
             long owner = zdo.GetOwner();
             if (owner != 0) ZRoutedRpc.instance.InvokeRoutedRPC(owner, target, "RPC_Damage", hit);
 

@@ -120,7 +120,9 @@ namespace ValheimFirearms
 
         private static void ApplyDamageDisplay(ItemDrop.ItemData.SharedData s)
         {
-            s.m_damages = new HitData.DamageTypes { m_pierce = FirearmsConfig.Damage.Value };
+            s.m_damages = FirearmsConfig.IgnoreResistances.Value
+                ? new HitData.DamageTypes { m_damage = FirearmsConfig.Damage.Value }
+                : new HitData.DamageTypes { m_pierce = FirearmsConfig.Damage.Value };
             s.m_attackForce = FirearmsConfig.PushForce.Value;
         }
 

@@ -33,7 +33,7 @@ namespace ValheimFirearms
         public static ConfigEntry<KeyCode> ReloadKey, FireModeKey;
 
         // Serveur (synchronisés)
-        public static ConfigEntry<bool> ServerValidation;
+        public static ConfigEntry<bool> ServerValidation, IgnoreResistances, IgnorePvP;
         public static ConfigEntry<float> MaxOriginError, HitTolerance, FireRateTolerance;
 
         // Recettes (synchronisées)
@@ -47,7 +47,7 @@ namespace ValheimFirearms
 
         public static void Bind(ConfigFile c)
         {
-            Damage = Synced(c, "1 - Balistique", "Damage", 38f, "Dégâts perforants d'une balle à la bouche du canon, avant résistances de la cible.", 1f, 500f);
+            Damage = Synced(c, "1 - Balistique", "Damage", 80f, "Dégâts d'une balle à la bouche du canon (avant armure des joueurs).", 1f, 500f);
             HeadshotMultiplier = Synced(c, "1 - Balistique", "HeadshotMultiplier", 2.5f, "Multiplicateur appliqué si l'impact est sur la tête (ou un point faible du monstre).", 1f, 10f);
             MuzzleVelocity = Synced(c, "1 - Balistique", "MuzzleVelocity", 715f, "Vitesse initiale en m/s (1 unité Valheim = 1 m ; 7,62x39 réel ≈ 715 m/s).", 50f, 2000f);
             GravityScale = Synced(c, "1 - Balistique", "GravityScale", 1f, "Multiplicateur de gravité sur la balle (1 = 9,81 m/s²).", 0f, 10f);
@@ -90,6 +90,8 @@ namespace ValheimFirearms
             ReloadKey = c.Bind("5 - Touches", "Reload", KeyCode.R, "Recharger.");
             FireModeKey = c.Bind("5 - Touches", "FireMode", KeyCode.B, "Basculer auto / coup par coup.");
 
+            IgnoreResistances = SyncedBool(c, "1 - Balistique", "IgnoreResistances", true, "Les balles ignorent les résistances et immunités des créatures et des boss (dégâts bruts). false = dégâts perforants classiques.");
+            IgnorePvP = SyncedBool(c, "6 - Serveur", "IgnorePvP", true, "Les balles touchent aussi les joueurs qui n'ont pas activé le PvP.");
             ServerValidation = SyncedBool(c, "6 - Serveur", "ServerValidation", true, "Le serveur vérifie chaque tir (position, cadence, chargeur, cohérence des impacts) avant d'appliquer les dégâts.");
             MaxOriginError = Synced(c, "6 - Serveur", "MaxOriginError", 6f, "Écart maximal toléré entre la position du tireur connue du serveur et l'origine du tir, en mètres.", 1f, 50f);
             HitTolerance = Synced(c, "6 - Serveur", "HitTolerance", 4f, "Écart maximal toléré entre l'impact annoncé et la position de la cible connue du serveur, en mètres.", 0.5f, 50f);
